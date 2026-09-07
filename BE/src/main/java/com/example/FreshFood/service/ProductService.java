@@ -67,7 +67,7 @@ public class    ProductService {
 
         return productMapper.toProductResponse(product);
     }
-    public List<ProductResponse> getProductByStatus(){
+    public List<ProductResponse> getApprovedProducts(){
         List<Product> products = productRepository.findByStatus(ProductStatus.APPROVED);
 
         return products.stream()

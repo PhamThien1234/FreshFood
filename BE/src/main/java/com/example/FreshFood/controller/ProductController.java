@@ -9,11 +9,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/product")
+@RequestMapping("/api/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -30,10 +31,13 @@ public class ProductController {
     }
     @PutMapping("/{id}/approve")
     @PreAuthorize("hasAuthority('PRODUCT_APPROVE')")
-    public ProductResponse approveProduct(
-            @PathVariable UUID id
-    ) {
+    public ProductResponse approveProduct(@PathVariable UUID id) {
         return productService.approveProduct(id);
+    }
+    @GetMapping
+    @PreAuthorize("hasAuthority('PRODUCT_VIEW')")
+    public List<ProductResponse> getApproveProducts(){
+        return productService.getApprovedProducts();
     }
 
 }
