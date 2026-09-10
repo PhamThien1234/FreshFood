@@ -14,4 +14,6 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     List<Product> findByFarmerId(UUID farmerId);
 
     Optional<Product> findByIdAndStatus(UUID Id, ProductStatus status);
+
+    List<Product> findByStatusAndNameContainingIgnoreCase(ProductStatus status, String name);
 }

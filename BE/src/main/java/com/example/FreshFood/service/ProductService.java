@@ -74,4 +74,11 @@ public class    ProductService {
                 .map(productMapper::toProductResponse)
                 .toList();
     }
+    public List<ProductResponse> searchProducts(String keyword){
+        List<Product> products = productRepository.findByStatusAndNameContainingIgnoreCase(ProductStatus.APPROVED, keyword);
+
+        return products.stream()
+                .map(productMapper::toProductResponse)
+                .toList();
+    }
 }
