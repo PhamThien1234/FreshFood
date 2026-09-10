@@ -50,7 +50,6 @@ public final class RolePermissionMapper {
                     Permission.PRODUCT_SEARCH,
                     Permission.PRODUCT_FILTER,
                     Permission.PRODUCT_CREATE,
-                    Permission.PRODUCT_UPDATE,
                     Permission.PRODUCT_DELETE,
                     Permission.PRODUCT_IMAGE_UPLOAD,
                     Permission.PRODUCT_APPROVE,

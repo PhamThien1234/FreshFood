@@ -16,4 +16,8 @@ public interface ProductRepository extends JpaRepository<Product, UUID> {
     Optional<Product> findByIdAndStatus(UUID Id, ProductStatus status);
 
     List<Product> findByStatusAndNameContainingIgnoreCase(ProductStatus status, String name);
+
+    List<Product> findByStatusAndCategoryIgnoreCase(ProductStatus status, String category);
+
+    Optional<Product> findByIdAndFarmerUsername(UUID id, String username);
 }

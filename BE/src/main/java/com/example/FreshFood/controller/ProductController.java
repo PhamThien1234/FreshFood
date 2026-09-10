@@ -1,6 +1,7 @@
 package com.example.FreshFood.controller;
 
 import com.example.FreshFood.dto.request.ProductRequest;
+import com.example.FreshFood.dto.request.ProductUpdateRequest;
 import com.example.FreshFood.dto.response.ProductResponse;
 import com.example.FreshFood.entity.Product;
 import com.example.FreshFood.service.ProductService;
@@ -27,13 +28,18 @@ public class ProductController {
     }
     @GetMapping
     @PreAuthorize("hasAuthority('PRODUCT_VIEW')")
-    public List<ProductResponse> getApproveProducts(){
+    public List<ProductResponse> getApprovedProducts(){
         return productService.getApprovedProducts();
     }
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('PRODUCT_SEARCH')")
     public List<ProductResponse> searchProducts(@RequestParam String keyword){
         return productService.searchProducts(keyword);
+    }
+    @GetMapping("/filter")
+    @PreAuthorize("hasAuthority('PRODUCT_FILTER')")
+    public List<ProductResponse> filterProducts(@RequestParam String category){
+        return productService.filterProducts(category);
     }
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('PRODUCT_VIEW')")
@@ -44,6 +50,16 @@ public class ProductController {
     @PreAuthorize("hasAuthority('PRODUCT_APPROVE')")
     public ProductResponse approveProduct(@PathVariable UUID id) {
         return productService.approveProduct(id);
+    }
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('PRODUCT_UPDATE')")
+    public ProductResponse updateProduct(@PathVariable UUID id,@Valid @RequestBody ProductUpdateRequest request, Authentication authentication){
+        return productService.updateProduct(id, request,authentication.getName());
+    }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('PRODUCT_DELETE')")
+    public void deleteProduct(@PathVariable UUID id, Authentication authentication){
+        productService.deleteProduct(id,authentication.getName());
     }
 
 }

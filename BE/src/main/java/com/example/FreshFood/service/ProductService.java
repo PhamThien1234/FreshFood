@@ -1,6 +1,7 @@
 package com.example.FreshFood.service;
 
 import com.example.FreshFood.dto.request.ProductRequest;
+import com.example.FreshFood.dto.request.ProductUpdateRequest;
 import com.example.FreshFood.dto.response.ProductResponse;
 import com.example.FreshFood.entity.Product;
 import com.example.FreshFood.entity.User;
@@ -80,5 +81,32 @@ public class    ProductService {
         return products.stream()
                 .map(productMapper::toProductResponse)
                 .toList();
+    }
+    public List<ProductResponse> filterProducts(String category){
+        List<Product> products = productRepository.findByStatusAndCategoryIgnoreCase(ProductStatus.APPROVED, category);
+
+        return products.stream()
+                .map(productMapper::toProductResponse)
+                .toList();
+    }
+    public ProductResponse updateProduct(UUID id, ProductUpdateRequest request, String username){
+        Product product = productRepository.findByIdAndFarmerUsername(id, username)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+        product.setCategory(request.getCategory());
+
+        product.setStatus(ProductStatus.PENDING);
+        product = productRepository.save(product);
+
+        return productMapper.toProductResponse(product);
+    }
+    public void deleteProduct(UUID id, String username){
+        Product product = productRepository.findByIdAndFarmerUsername(id, username)
+                .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
+        productRepository.delete(product);
     }
 }
