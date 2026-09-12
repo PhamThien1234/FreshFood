@@ -11,15 +11,17 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
     @ExceptionHandler(AppException.class)
     public ResponseEntity<ErrorResponse> handleAppException(AppException exception) {
+        ErrorCode errorCode = exception.getErrorCode();
 
         ErrorResponse response = new ErrorResponse(
-                exception.getCode(),
-                exception.getMessage(),
+                errorCode.name(),
+                errorCode.getMessage(),
                 LocalDateTime.now()
+
         );
 
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(errorCode.getHttpStatus())
                 .body(response);
     }
 

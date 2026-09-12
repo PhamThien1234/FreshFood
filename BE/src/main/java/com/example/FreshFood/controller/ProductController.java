@@ -7,9 +7,11 @@ import com.example.FreshFood.entity.Product;
 import com.example.FreshFood.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -60,6 +62,16 @@ public class ProductController {
     @PreAuthorize("hasAuthority('PRODUCT_DELETE')")
     public void deleteProduct(@PathVariable UUID id, Authentication authentication){
         productService.deleteProduct(id,authentication.getName());
+    }
+    @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAuthority('PRODUCT_IMAGE_UPLOAD')")
+    public ProductResponse uploadProductImage(@PathVariable UUID id, @RequestParam("file") MultipartFile file,
+                                              Authentication authentication) {
+        return productService.uploadProductImage(
+                id,
+                file,
+                authentication.getName()
+        );
     }
 
 }

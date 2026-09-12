@@ -42,10 +42,10 @@ public class UserService {
     }
     public UserResponse registerFarmer(FarmerRegisterRequest farmerRegisterRequest){
         if(userRepository.existsByUsername(farmerRegisterRequest.getUsername()))
-            throw new RuntimeException(ErrorCode.USERNAME_ALREADY_EXIST);
+            throw new AppException(ErrorCode.USERNAME_ALREADY_EXIST);
 
         if(userRepository.existsByEmail(farmerRegisterRequest.getEmail()))
-            throw new RuntimeException(ErrorCode.EMAIL_ALREADY_EXIST);
+            throw new AppException(ErrorCode.EMAIL_ALREADY_EXIST);
 
         User user = User.builder()
                 .username(farmerRegisterRequest.getUsername())

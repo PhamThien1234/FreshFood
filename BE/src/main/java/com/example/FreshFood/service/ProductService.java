@@ -13,6 +13,7 @@ import com.example.FreshFood.repository.ProductRepository;
 import com.example.FreshFood.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +26,8 @@ public class    ProductService {
     private final UserRepository userRepository;
 
     private final ProductMapper productMapper;
+
+    private final FileStorageService fileStorageService;
 
     public ProductResponse createProduct(ProductRequest request, String username){
         User farmer = userRepository.findByUsername(username)
@@ -108,5 +111,25 @@ public class    ProductService {
         Product product = productRepository.findByIdAndFarmerUsername(id, username)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         productRepository.delete(product);
+    }
+    public ProductResponse uploadProductImage(
+            UUID id,
+            MultipartFile file,
+            String username
+    ) {
+        Product product = productRepository
+                .findByIdAndFarmerUsername(id, username)
+                .orElseThrow(() ->
+                        new AppException(ErrorCode.PRODUCT_NOT_FOUND)
+                );
+        String imageUrl = fileStorageService.saveProductImage(file);
+
+        product.setImageUrl(imageUrl);
+
+        product.setStatus(ProductStatus.PENDING);
+
+        product = productRepository.save(product);
+
+        return productMapper.toProductResponse(product);
     }
 }
