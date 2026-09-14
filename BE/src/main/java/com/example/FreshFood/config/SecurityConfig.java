@@ -35,6 +35,7 @@ public class SecurityConfig {
                 )
 
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/auth/register/customer",

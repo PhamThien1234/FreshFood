@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Service
 public class FileStorageService {
-    private final Path productUploadPath = Paths.get("uploads/product").toAbsolutePath().normalize();
+    private final Path productUploadPath = Paths.get("uploads/products").toAbsolutePath().normalize();
 
     public String saveProductImage(MultipartFile file){
         if(file.isEmpty() || file == null){
