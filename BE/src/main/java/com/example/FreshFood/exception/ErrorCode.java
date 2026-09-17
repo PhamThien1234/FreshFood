@@ -15,7 +15,10 @@ public enum ErrorCode {
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy sản phẩm"),
     PRODUCT_ALREADY_PROCESSED(HttpStatus.CONFLICT, "Sản phẩm đã được xử lý"),
     INVALID_FILE(HttpStatus.BAD_REQUEST, "File không hợp lệ"),
-    FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Tải file lên thất bại");
+    FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Tải file lên thất bại"),
+    ORDER_EMPTY(HttpStatus.BAD_REQUEST, "Đơn hàng phải có ít nhất một sản phẩm"),
+    PRODUCT_OUT_OF_STOCK(HttpStatus.BAD_REQUEST, "Sản phẩm không đủ số lượng tồn kho"),
+    PRODUCT_NOT_APPROVED(HttpStatus.BAD_REQUEST, "Sản phẩm chưa được duyệt");
 
     private final HttpStatus httpStatus;
     private final String message;
