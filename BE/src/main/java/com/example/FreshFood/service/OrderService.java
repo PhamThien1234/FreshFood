@@ -15,12 +15,13 @@ import com.example.FreshFood.mapper.OrderMapper;
 import com.example.FreshFood.repository.OrderRepository;
 import com.example.FreshFood.repository.ProductRepository;
 import com.example.FreshFood.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -77,6 +78,30 @@ public class OrderService {
 
         return orderMapper.toOrderResponse(savedOrder);
     }
+    @Transactional(readOnly =true)
+    public List<OrderResponse> getMyOrders(String username){
+        List<Order> orders = orderRepository.findByCustomerUsernameOrderByCreatedAtDesc(username);
+        return orders.stream()
+                .map(orderMapper::toOrderResponse)
+                .toList();
+    }
+    @Transactional(readOnly = true)
+    public List<OrderResponse> getFarmerOrders(String farmerUsername) {
+        List<Order> orders =
+                orderRepository.findOrdersContainingFarmerProducts(farmerUsername);
 
+        return orders.stream()
+                .map(orderMapper::toOrderResponse)
+                .toList();
+    }
+    @Transactional(readOnly = true)
+    public List<OrderResponse> getAllOrders() {
+        List<Order> orders =
+                orderRepository.findAllByOrderByCreatedAtDesc();
+
+        return orders.stream()
+                .map(orderMapper::toOrderResponse)
+                .toList();
+    }
 
 }

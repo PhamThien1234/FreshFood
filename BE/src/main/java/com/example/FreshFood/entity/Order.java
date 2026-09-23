@@ -60,4 +60,15 @@ public class Order {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+    @OneToMany(
+            mappedBy = "order",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<SubOrder> subOrders = new ArrayList<>();
+
+    public void addSubOrder(SubOrder subOrder) {
+        subOrders.add(subOrder);
+        subOrder.setOrder(this);
+    }
 }

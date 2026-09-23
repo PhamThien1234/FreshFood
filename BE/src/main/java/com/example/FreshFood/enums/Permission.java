@@ -21,6 +21,7 @@ public enum Permission {
 
     ORDER_CREATE,
     ORDER_VIEW_OWN,
+    ORDER_VIEW_FARMER,
     ORDER_VIEW_ALL,
     ORDER_UPDATE,
 

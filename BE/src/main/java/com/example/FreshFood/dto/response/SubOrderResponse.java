@@ -1,7 +1,8 @@
 package com.example.FreshFood.dto.response;
 
-import com.example.FreshFood.enums.OrderStatus;
-import lombok.*;
+import com.example.FreshFood.enums.SubOrderStatus;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,14 +10,17 @@ import java.util.List;
 import java.util.UUID;
 
 @Getter
-@Setter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class OrderResponse {
+public class SubOrderResponse {
     private UUID id;
+
+    private String farmerUsername;
+
     private BigDecimal totalAmount;
-    private String shippingAddress;
+
+    private SubOrderStatus status;
+
     private LocalDateTime createdAt;
-    private List<SubOrderResponse> subOrders;
+
+    private List<SubOrderItemResponse> items;
 }

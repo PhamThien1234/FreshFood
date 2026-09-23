@@ -38,9 +38,9 @@ public class SecurityConfig {
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
-                                "/auth/register/customer",
-                                "/auth/register/farmer",
-                                "/auth/login"
+                                "/api/auth/register/customer",
+                                "/api/auth/register/farmer",
+                                "/api/auth/login"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

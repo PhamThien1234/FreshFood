@@ -40,31 +40,15 @@ public final class RolePermissionMapper {
                     Permission.PRODUCT_DELETE,
                     Permission.PRODUCT_IMAGE_UPLOAD,
 
-                    Permission.ORDER_VIEW_OWN,
+                    Permission.ORDER_VIEW_FARMER,
 
                     Permission.REVENUE_VIEW_OWN
             ));
 
             case ADMIN -> Collections.unmodifiableSet(EnumSet.of(
                     Permission.PRODUCT_VIEW,
-                    Permission.PRODUCT_SEARCH,
-                    Permission.PRODUCT_FILTER,
-                    Permission.PRODUCT_CREATE,
-                    Permission.PRODUCT_DELETE,
-                    Permission.PRODUCT_IMAGE_UPLOAD,
                     Permission.PRODUCT_APPROVE,
 
-                    Permission.FAVORITE_CREATE,
-                    Permission.FAVORITE_DELETE,
-                    Permission.FAVORITE_VIEW,
-
-                    Permission.CART_VIEW,
-                    Permission.CART_CREATE,
-                    Permission.CART_UPDATE,
-                    Permission.CART_DELETE,
-
-                    Permission.ORDER_CREATE,
-                    Permission.ORDER_VIEW_OWN,
                     Permission.ORDER_VIEW_ALL,
                     Permission.ORDER_UPDATE,
 
@@ -72,7 +56,6 @@ public final class RolePermissionMapper {
                     Permission.USER_LOCK,
                     Permission.USER_UNLOCK,
 
-                    Permission.REVENUE_VIEW_OWN,
                     Permission.REVENUE_VIEW_ALL,
 
                     Permission.DASHBOARD_VIEW
