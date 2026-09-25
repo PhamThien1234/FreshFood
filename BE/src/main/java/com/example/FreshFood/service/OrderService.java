@@ -3,30 +3,31 @@ package com.example.FreshFood.service;
 import com.example.FreshFood.dto.request.OrderItemRequest;
 import com.example.FreshFood.dto.request.OrderRequest;
 import com.example.FreshFood.dto.response.OrderResponse;
-import com.example.FreshFood.entity.Order;
-import com.example.FreshFood.entity.OrderItem;
-import com.example.FreshFood.entity.Product;
-import com.example.FreshFood.entity.User;
+import com.example.FreshFood.dto.response.SubOrderResponse;
+import com.example.FreshFood.entity.*;
 import com.example.FreshFood.enums.OrderStatus;
 import com.example.FreshFood.enums.ProductStatus;
+import com.example.FreshFood.enums.SubOrderStatus;
 import com.example.FreshFood.exception.AppException;
 import com.example.FreshFood.exception.ErrorCode;
 import com.example.FreshFood.mapper.OrderMapper;
 import com.example.FreshFood.repository.OrderRepository;
 import com.example.FreshFood.repository.ProductRepository;
+import com.example.FreshFood.repository.SubOrderRepository;
 import com.example.FreshFood.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
+
+    private final SubOrderRepository subOrderRepository;
 
     private final OrderMapper orderMapper;
 
@@ -45,28 +46,48 @@ public class OrderService {
     Order order = Order.builder()
             .customer(customer)
             .shippingAddress(request.getShippingAddress())
-            .status(OrderStatus.PENDING)
             .totalAmount(BigDecimal.ZERO)
-            .orderItems(new ArrayList<>())
+            .subOrders(new ArrayList<>())
             .build();
     BigDecimal totalAmount = BigDecimal.ZERO;
+
+    Map<UUID, SubOrder> subOrderMap = new HashMap<>();
 
     for(OrderItemRequest itemRequest : request.getItems()){ // itemRequest: Biến đại diện cho từng phần tử trong danh sách, tại mỗi lượt lặp
         Product product = productRepository.findByIdAndStatus(itemRequest.getProductId(), ProductStatus.APPROVED)
                 .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_FOUND));
         if(product.getQuantity() < itemRequest.getQuantity())
             throw new AppException(ErrorCode.PRODUCT_OUT_OF_STOCK);
+
         BigDecimal unitPrice = product.getPrice();
         BigDecimal subtotal = unitPrice.multiply(BigDecimal.valueOf(itemRequest.getQuantity()));
 
-        OrderItem orderItem = OrderItem.builder()
-                .order(order)
+        UUID farmerId = product.getFarmer().getId();
+
+        SubOrder subOrder = subOrderMap.get(farmerId);
+
+        if(subOrder == null){
+            subOrder = SubOrder.builder()
+                    .order(order)
+                    .farmer(product.getFarmer())
+                    .status(SubOrderStatus.PENDING)
+                    .totalAmount(BigDecimal.ZERO)
+                    .subOrderItems(new ArrayList<>())
+                    .build();
+        }
+        subOrderMap.put(farmerId, subOrder);
+
+        SubOrderItem subOrderItem = SubOrderItem.builder()
+                .subOrder(subOrder)
                 .product(product)
                 .quantity(itemRequest.getQuantity())
                 .unitPrice(unitPrice)
                 .subtotal(subtotal)
                 .build();
-        order.getOrderItems().add(orderItem);
+
+        subOrder.getSubOrderItems().add(subOrderItem);
+
+        subOrder.setTotalAmount(subOrder.getTotalAmount().add(subtotal));
 
         product.setQuantity(product.getQuantity() - itemRequest.getQuantity());
 
@@ -86,12 +107,11 @@ public class OrderService {
                 .toList();
     }
     @Transactional(readOnly = true)
-    public List<OrderResponse> getFarmerOrders(String farmerUsername) {
-        List<Order> orders =
-                orderRepository.findOrdersContainingFarmerProducts(farmerUsername);
+    public List<SubOrderResponse> getFarmerOrders(String farmerUsername) {
+                List<SubOrder> subOrders = subOrderRepository.findByFarmerUsernameOrderByCreatedAtDesc(farmerUsername);
 
-        return orders.stream()
-                .map(orderMapper::toOrderResponse)
+        return subOrders.stream()
+                .map(orderMapper::toSubOrderResponse)
                 .toList();
     }
     @Transactional(readOnly = true)

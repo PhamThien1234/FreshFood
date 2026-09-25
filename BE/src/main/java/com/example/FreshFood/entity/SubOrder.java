@@ -2,9 +2,7 @@ package com.example.FreshFood.entity;
 
 import com.example.FreshFood.enums.SubOrderStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,7 +14,9 @@ import java.util.UUID;
 @Table(name = "sub_orders")
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class SubOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

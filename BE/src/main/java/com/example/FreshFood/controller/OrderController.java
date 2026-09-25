@@ -2,6 +2,7 @@ package com.example.FreshFood.controller;
 
 import com.example.FreshFood.dto.request.OrderRequest;
 import com.example.FreshFood.dto.response.OrderResponse;
+import com.example.FreshFood.dto.response.SubOrderResponse;
 import com.example.FreshFood.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,6 @@ public class OrderController {
     public OrderResponse createOrder(@Valid @RequestBody OrderRequest request, Authentication authentication) {
         return orderService.createOrder(request, authentication.getName());
     }
-
     @GetMapping("/my-orders")
     @PreAuthorize("hasAuthority('ORDER_VIEW_OWN')")
     public List<OrderResponse> get(Authentication authentication) {
@@ -30,9 +30,7 @@ public class OrderController {
     }
     @GetMapping("/farmer-orders")
     @PreAuthorize("hasAuthority('ORDER_VIEW_FARMER')")
-    public List<OrderResponse> getFarmerOrders(
-            Authentication authentication
-    ) {
+    public List<SubOrderResponse> getFarmerOrders(Authentication authentication) {
         return orderService.getFarmerOrders(authentication.getName());
     }
     @GetMapping("/all")
