@@ -49,7 +49,6 @@ public class OrderService {
             .totalAmount(BigDecimal.ZERO)
             .subOrders(new ArrayList<>())
             .build();
-    BigDecimal totalAmount = BigDecimal.ZERO;
 
     Map<UUID, SubOrder> subOrderMap = new HashMap<>();
 
@@ -70,12 +69,13 @@ public class OrderService {
             subOrder = SubOrder.builder()
                     .order(order)
                     .farmer(product.getFarmer())
-                    .status(SubOrderStatus.PENDING)
                     .totalAmount(BigDecimal.ZERO)
+                    .status(SubOrderStatus.PENDING)
                     .subOrderItems(new ArrayList<>())
                     .build();
-        }
         subOrderMap.put(farmerId, subOrder);
+        order.addSubOrder(subOrder);
+        }
 
         SubOrderItem subOrderItem = SubOrderItem.builder()
                 .subOrder(subOrder)
@@ -85,15 +85,16 @@ public class OrderService {
                 .subtotal(subtotal)
                 .build();
 
-        subOrder.getSubOrderItems().add(subOrderItem);
+        subOrder.addSubOrderItem(subOrderItem);
 
         subOrder.setTotalAmount(subOrder.getTotalAmount().add(subtotal));
 
         product.setQuantity(product.getQuantity() - itemRequest.getQuantity());
-
-        totalAmount = totalAmount.add(subtotal);
-        }
-        order.setTotalAmount(totalAmount);
+     }
+        BigDecimal orderTotalAmount = order.getSubOrders().stream()
+                .map(SubOrder::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        order.setTotalAmount(orderTotalAmount);
 
         Order savedOrder = orderRepository.save(order);
 

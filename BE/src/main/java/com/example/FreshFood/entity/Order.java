@@ -42,13 +42,13 @@ public class Order {
 
     private LocalDateTime updatedAt;
 
-    @OneToMany(
-            mappedBy = "order",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true // Nếu một OrderItem bị xóa khỏi Order, nó cũng bị xóa khỏi database.
-    )
-    @Builder.Default
-    private List<OrderItem> orderItems = new ArrayList<>();
+//    @OneToMany(
+//            mappedBy = "order",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true // Nếu một OrderItem bị xóa khỏi Order, nó cũng bị xóa khỏi database.
+//    )
+//    @Builder.Default
+//    private List<OrderItem> orderItems = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {

@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "sub_orders")
+@Table(name = "sub_order_items")
 @Getter
 @Setter
 @NoArgsConstructor
