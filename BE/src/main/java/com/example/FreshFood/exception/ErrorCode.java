@@ -11,14 +11,17 @@ public enum ErrorCode {
     USER_UN_EXISTED(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"),
     EMAIL_ALREADY_EXIST(HttpStatus.CONFLICT, "Email đã được sử dụng"),
     USER_DISABLED(HttpStatus.FORBIDDEN, "Tài khoản đã bị vô hiệu hóa"),
-    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Sai tên đăng nhập hoặc mật khẩu"),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy sản phẩm"),
     PRODUCT_ALREADY_PROCESSED(HttpStatus.CONFLICT, "Sản phẩm đã được xử lý"),
     INVALID_FILE(HttpStatus.BAD_REQUEST, "File không hợp lệ"),
     FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Tải file lên thất bại"),
     ORDER_EMPTY(HttpStatus.BAD_REQUEST, "Đơn hàng phải có ít nhất một sản phẩm"),
     PRODUCT_OUT_OF_STOCK(HttpStatus.BAD_REQUEST, "Sản phẩm không đủ số lượng tồn kho"),
-    PRODUCT_NOT_APPROVED(HttpStatus.BAD_REQUEST, "Sản phẩm chưa được duyệt");
+    PRODUCT_NOT_APPROVED(HttpStatus.BAD_REQUEST, "Sản phẩm chưa được duyệt"),
+    INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Sai tên đăng nhập hoặc mật khẩu"),
+    SUB_ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy SubOrder"),
+    SUB_ORDER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "Bạn không có quyền cập nhật SubOrder này"
+    );
 
     private final HttpStatus httpStatus;
     private final String message;

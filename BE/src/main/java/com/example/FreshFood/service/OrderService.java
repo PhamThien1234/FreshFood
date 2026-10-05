@@ -2,10 +2,10 @@ package com.example.FreshFood.service;
 
 import com.example.FreshFood.dto.request.OrderItemRequest;
 import com.example.FreshFood.dto.request.OrderRequest;
+import com.example.FreshFood.dto.request.SubOrderStatusRequest;
 import com.example.FreshFood.dto.response.OrderResponse;
 import com.example.FreshFood.dto.response.SubOrderResponse;
 import com.example.FreshFood.entity.*;
-import com.example.FreshFood.enums.OrderStatus;
 import com.example.FreshFood.enums.ProductStatus;
 import com.example.FreshFood.enums.SubOrderStatus;
 import com.example.FreshFood.exception.AppException;
@@ -124,5 +124,23 @@ public class OrderService {
                 .map(orderMapper::toOrderResponse)
                 .toList();
     }
+    @Transactional
+    public SubOrderResponse updateSubOrderStatus(UUID subOrderId, SubOrderStatusRequest status, String username){
+        SubOrder subOrder = subOrderRepository.findById(subOrderId)
+                .orElseThrow(() -> new AppException(ErrorCode.SUB_ORDER_NOT_FOUND));
+        if(!subOrder.getFarmer().getUsername().equals(username))
+            throw new AppException(ErrorCode.SUB_ORDER_ACCESS_DENIED);
 
+
+        if(!subOrder.getStatus().canTransitionTo(status.getStatus())){
+            throw new RuntimeException(
+                    "Can not change status from"
+                            + subOrder.getStatus()
+                            + " to"
+                            + status
+            );
+        }
+        subOrder.setStatus(status.getStatus());
+        return orderMapper.toSubOrderResponse(subOrderRepository.save(subOrder));
+    }
 }

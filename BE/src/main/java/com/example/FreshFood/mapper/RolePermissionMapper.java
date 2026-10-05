@@ -41,6 +41,7 @@ public final class RolePermissionMapper {
                     Permission.PRODUCT_IMAGE_UPLOAD,
 
                     Permission.ORDER_VIEW_FARMER,
+                    Permission.ORDER_UPDATE,
 
                     Permission.REVENUE_VIEW_OWN
             ));

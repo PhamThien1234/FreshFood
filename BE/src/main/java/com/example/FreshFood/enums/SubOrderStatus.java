@@ -6,5 +6,21 @@ public enum SubOrderStatus {
     PROCESSING,
     SHIPPING,
     COMPLETED,
-    CANCELLED
+    CANCELLED;
+
+    public boolean canTransitionTo(SubOrderStatus next){
+        return switch (this){
+            case PENDING ->
+                next == CONFIRMED || next == CANCELLED;
+            case CONFIRMED ->
+                next == PROCESSING;
+            case  PROCESSING ->
+                next == SHIPPING;
+            case SHIPPING ->
+                next == COMPLETED;
+
+            case COMPLETED, CANCELLED -> false;
+
+        };
+    }
 }

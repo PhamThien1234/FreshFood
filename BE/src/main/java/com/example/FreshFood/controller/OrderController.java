@@ -1,8 +1,10 @@
 package com.example.FreshFood.controller;
 
 import com.example.FreshFood.dto.request.OrderRequest;
+import com.example.FreshFood.dto.request.SubOrderStatusRequest;
 import com.example.FreshFood.dto.response.OrderResponse;
 import com.example.FreshFood.dto.response.SubOrderResponse;
+import com.example.FreshFood.enums.SubOrderStatus;
 import com.example.FreshFood.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -37,5 +40,12 @@ public class OrderController {
     @PreAuthorize("hasAuthority('ORDER_VIEW_ALL')")
     public List<OrderResponse> getAllOrders() {
         return orderService.getAllOrders();
+    }
+    @PutMapping("/sub-orders/{subOrderId}/status")
+    @PreAuthorize("hasAuthority('ORDER_UPDATE')")
+    public SubOrderResponse updateSubOrderUpdate(@PathVariable UUID subOrderId,
+                                                 @Valid @RequestBody SubOrderStatusRequest request,
+                                                 Authentication authentication){
+        return orderService.updateSubOrderStatus(subOrderId, request, authentication.getName());
     }
 }
