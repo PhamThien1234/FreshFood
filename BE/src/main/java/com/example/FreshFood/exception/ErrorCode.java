@@ -1,6 +1,5 @@
 package com.example.FreshFood.exception;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -20,8 +19,8 @@ public enum ErrorCode {
     PRODUCT_NOT_APPROVED(HttpStatus.BAD_REQUEST, "Sản phẩm chưa được duyệt"),
     INVALID_CREDENTIALS(HttpStatus.UNAUTHORIZED, "Sai tên đăng nhập hoặc mật khẩu"),
     SUB_ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy SubOrder"),
-    SUB_ORDER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "Bạn không có quyền cập nhật SubOrder này"
-    );
+    SUB_ORDER_ACCESS_DENIED(HttpStatus.FORBIDDEN, "Bạn không có quyền cập nhật SubOrder này"),
+    INVALID_SUB_ORDER_STATUS(HttpStatus.BAD_REQUEST, "Chuyển trạng thái không hợp lệ");
 
     private final HttpStatus httpStatus;
     private final String message;

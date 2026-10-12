@@ -48,4 +48,14 @@ public class OrderController {
                                                  Authentication authentication){
         return orderService.updateSubOrderStatus(subOrderId, request, authentication.getName());
     }
+    @PutMapping("/sub-orders/{subOrderId}/cancel")
+    @PreAuthorize("hasAuthority('ORDER_CANCEL_OWN')")
+    public SubOrderResponse cancelSubOrder(
+            @PathVariable UUID subOrderId,
+            Authentication authentication) {
+        return orderService.cancelSubOrder(
+                subOrderId,
+                authentication.getName()
+        );
+    }
 }

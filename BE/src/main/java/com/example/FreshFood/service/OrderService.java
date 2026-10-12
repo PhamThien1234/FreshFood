@@ -125,22 +125,30 @@ public class OrderService {
                 .toList();
     }
     @Transactional
-    public SubOrderResponse updateSubOrderStatus(UUID subOrderId, SubOrderStatusRequest status, String username){
+    public SubOrderResponse updateSubOrderStatus(UUID subOrderId, SubOrderStatusRequest status, String username) {
         SubOrder subOrder = subOrderRepository.findById(subOrderId)
                 .orElseThrow(() -> new AppException(ErrorCode.SUB_ORDER_NOT_FOUND));
-        if(!subOrder.getFarmer().getUsername().equals(username))
+        if (!subOrder.getFarmer().getUsername().equals(username))
             throw new AppException(ErrorCode.SUB_ORDER_ACCESS_DENIED);
 
-
-        if(!subOrder.getStatus().canTransitionTo(status.getStatus())){
-            throw new RuntimeException(
-                    "Can not change status from"
-                            + subOrder.getStatus()
-                            + " to"
-                            + status
-            );
+        if (!subOrder.getStatus().canTransitionTo(status.getStatus())) {
+            throw new AppException(ErrorCode.INVALID_SUB_ORDER_STATUS);
         }
         subOrder.setStatus(status.getStatus());
         return orderMapper.toSubOrderResponse(subOrderRepository.save(subOrder));
+    }
+    @Transactional
+    public SubOrderResponse cancelSubOrder(UUID subOrderId, String username){
+        SubOrder subOrder = subOrderRepository.findById(subOrderId)
+                .orElseThrow(() -> new AppException(ErrorCode.SUB_ORDER_NOT_FOUND));
+        if(!subOrder.getOrder().getCustomer().getUsername().equals(username))
+            throw new AppException(ErrorCode.SUB_ORDER_ACCESS_DENIED);
+        if(subOrder.getStatus() != SubOrderStatus.PENDING)
+            throw new AppException(ErrorCode.INVALID_SUB_ORDER_STATUS);
+        subOrder.setStatus(SubOrderStatus.CANCELLED);
+
+        SubOrder savedSubOrder = subOrderRepository.save(subOrder);
+
+        return orderMapper.toSubOrderResponse(savedSubOrder);
     }
 }

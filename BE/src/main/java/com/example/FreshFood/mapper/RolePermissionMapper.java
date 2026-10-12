@@ -30,7 +30,8 @@ public final class RolePermissionMapper {
                     Permission.CART_DELETE,
 
                     Permission.ORDER_CREATE,
-                    Permission.ORDER_VIEW_OWN
+                    Permission.ORDER_VIEW_OWN,
+                    Permission.ORDER_CANCEL_OWN
             ));
 
             case FARMER -> Collections.unmodifiableSet(EnumSet.of(
