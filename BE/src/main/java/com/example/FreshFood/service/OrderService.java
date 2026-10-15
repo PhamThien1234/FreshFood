@@ -134,6 +134,15 @@ public class OrderService {
         if (!subOrder.getStatus().canTransitionTo(status.getStatus())) {
             throw new AppException(ErrorCode.INVALID_SUB_ORDER_STATUS);
         }
+        if(status.getStatus() == SubOrderStatus.CANCELLED){
+            for (SubOrderItem item : subOrder.getSubOrderItems()){
+                Product product = item.getProduct();
+                product.setQuantity(
+                        product.getQuantity() + item.getQuantity()
+                );
+            }
+        }
+
         subOrder.setStatus(status.getStatus());
         return orderMapper.toSubOrderResponse(subOrderRepository.save(subOrder));
     }
@@ -145,6 +154,12 @@ public class OrderService {
             throw new AppException(ErrorCode.SUB_ORDER_ACCESS_DENIED);
         if(subOrder.getStatus() != SubOrderStatus.PENDING)
             throw new AppException(ErrorCode.INVALID_SUB_ORDER_STATUS);
+        for(SubOrderItem item : subOrder.getSubOrderItems()){
+            Product product = item.getProduct();
+            product.setQuantity(
+                    product.getQuantity() + item.getQuantity());
+        }
+
         subOrder.setStatus(SubOrderStatus.CANCELLED);
 
         SubOrder savedSubOrder = subOrderRepository.save(subOrder);
