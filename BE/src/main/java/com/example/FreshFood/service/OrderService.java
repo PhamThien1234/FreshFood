@@ -142,7 +142,6 @@ public class OrderService {
                 );
             }
         }
-
         subOrder.setStatus(status.getStatus());
         return orderMapper.toSubOrderResponse(subOrderRepository.save(subOrder));
     }
@@ -159,7 +158,6 @@ public class OrderService {
             product.setQuantity(
                     product.getQuantity() + item.getQuantity());
         }
-
         subOrder.setStatus(SubOrderStatus.CANCELLED);
 
         SubOrder savedSubOrder = subOrderRepository.save(subOrder);
