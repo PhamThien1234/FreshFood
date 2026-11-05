@@ -57,4 +57,14 @@ public class FavouriteService {
                 .map(productMapper::toProductResponse)
                 .toList();
     }
+    public void removeFavorite(UUID productId, String username){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_UN_EXISTED));
+        boolean exist = favouriteRepository.existsByUserIdAndProductId(user.getId(), productId);
+
+        if(!exist){
+            throw new AppException(ErrorCode.FAVORITE_NOT_FOUND);
+        }
+        favouriteRepository.deleteByUserIdAndProductId(user.getId(), productId);
+    }
 }

@@ -17,7 +17,7 @@ public class FavoriteController {
     private final FavouriteService favouriteService;
 
     @PostMapping
-    @PreAuthorize(("hasAuthority('FAVORITE_CREATE')"))
+    @PreAuthorize("hasAuthority('FAVORITE_CREATE')")
     public String addFavourite(@PathVariable UUID productId, Authentication authentication){
         favouriteService.addFavourite(productId, authentication.getName());
 
@@ -25,8 +25,14 @@ public class FavoriteController {
     }
 
     @GetMapping
-    @PreAuthorize(("hasAuthority('FAVORITE_VIEW')"))
+    @PreAuthorize("hasAuthority('FAVORITE_VIEW')")
     public List<ProductResponse> getMyFavorite(Authentication authentication){
         return favouriteService.getMyFavorite(authentication.getName());
+    }
+    @DeleteMapping("/{productId}")
+    @PreAuthorize("hasAuthority('FAVORITE_DELETE')")
+    public String removeFavorite(@PathVariable UUID productId, Authentication authentication){
+        favouriteService.removeFavorite(productId, authentication.getName());
+        return ("Xóa yêu thích thành công");
     }
 }

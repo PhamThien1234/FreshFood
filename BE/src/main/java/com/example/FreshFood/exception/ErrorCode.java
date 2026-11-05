@@ -11,6 +11,7 @@ public enum ErrorCode {
     EMAIL_ALREADY_EXIST(HttpStatus.CONFLICT, "Email đã được sử dụng"),
     USER_DISABLED(HttpStatus.FORBIDDEN, "Tài khoản đã bị vô hiệu hóa"),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy sản phẩm"),
+    FAVORITE_NOT_FOUND(HttpStatus.NOT_FOUND, "Không tìm thấy sản phẩm yêu thích"),
     PRODUCT_ALREADY_PROCESSED(HttpStatus.CONFLICT, "Sản phẩm đã được xử lý"),
     INVALID_FILE(HttpStatus.BAD_REQUEST, "File không hợp lệ"),
     FILE_UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Tải file lên thất bại"),
