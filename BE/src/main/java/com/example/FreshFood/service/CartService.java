@@ -1,5 +1,6 @@
 package com.example.FreshFood.service;
 
+import com.example.FreshFood.dto.response.CartItemResponse;
 import com.example.FreshFood.entity.CartItem;
 import com.example.FreshFood.entity.Product;
 import com.example.FreshFood.entity.User;
@@ -11,7 +12,10 @@ import com.example.FreshFood.repository.ProductRepository;
 import com.example.FreshFood.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -51,6 +55,33 @@ public class CartService {
             cartItem.setQuantity(newQuantity);
         }
         cartItemRepository.save(cartItem);
+    }
+    @Transactional(readOnly = true)
+    public List<CartItemResponse> getMyCart(String username){
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_UN_EXISTED));
+        return cartItemRepository.findByUserId(user.getId())
+                .stream() // Chuyển mỗi CartItem thành CartItemResponse
+                .map(
+                        cartItem -> {
+                            Product product = cartItem.getProduct();
+
+                            BigDecimal subtotal = product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity()));
+
+                        return CartItemResponse.builder()
+                                .id(cartItem.getId())
+                                .productId(product.getId())
+                                .productName(product.getName())
+                                .price(product.getPrice())
+                                .imageUrl(product.getImageUrl())
+                                .category(product.getCategory())
+                                .quantity(product.getQuantity())
+                                .subtotal(subtotal)
+                                .build();
+
+                        })
+                .toList()
+                ;
     }
 
 }
